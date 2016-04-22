@@ -1,0 +1,31 @@
+---OutLine----------------------------------------------------------------
+--Launch Terminal as new window on current path if Finder is foremost
+--If Finder is not foremost, Launch Terminal as default
+--------------------------------------------------------------------------
+
+--Process is here--------------
+
+tell application "System Events"
+	--Get front process
+	set toProcess to item 1 of (every process whose frontmost is true)
+	--Check whether process is "Finder"
+	set objName to name of toProcess
+	if objName is equal to "Finder" then
+		--If Finder
+		tell application "Finder"
+			--Get POSIX path
+			set dirPath to POSIX path of (target of window 1 as string)
+			--Launch Terminal and execute cd command with POSIX path
+			tell application "Terminal"
+				activate
+				do script "cd " & "\"" & dirPath & "\""
+			end tell
+		end tell
+	else
+		--If not Finder,Launch Terminal
+		tell application "Terminal"
+			activate
+			reopen
+		end tell
+	end if
+end tell
